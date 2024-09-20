@@ -1,56 +1,45 @@
-"use client"; // Mark this file as a Client Component
+// Explicitly mark this file as a Client Component
+"use client";
 
-import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Container, Box, TextField, Button, Typography, Checkbox, FormControlLabel, Link } from '@mui/material';
 import Image from "next/image";
+import { useLoginUserMutation } from '@/lib/api';
+
+
+interface ApiError {
+    status: number;
+    data: {
+        message: string;
+    };
+}
 
 const LoginPage: React.FC = () => {
+
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const router = useRouter();
-    const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState(false);
-    console.log(process.env.NEXT_PUBLIC_BASE_URL);
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const [loginUser, { isLoading, error }] = useLoginUserMutation();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
-        setError(null);
 
+        // As we're using cookies, we don't need to check for token storage, just handle login status.
         if (!email || !password) {
-            setError('Please enter both email and password');
-            setLoading(false);
-            return;
+            return; // Possibly set an error message about required fields
         }
 
         try {
-            const response = await fetch(`${baseUrl}/auth/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                // Store the token in localStorage or sessionStorage
-                localStorage.setItem('token', data.token);
-
-                // Redirect to another page after successful login
-                router.push('/dashboard');
-            } else {
-                // Handle login failure
-                setError('Login failed. Please check your email and password.');
-            }
+            // Triggering the login mutation
+            await loginUser({ email, password }).unwrap();
+            router.push('/dashboard'); // Redirect on successful login
         } catch (error) {
-            setError('An error occurred during login. Please try again.');
             console.error('An error occurred during login:', error);
-        } finally {
-            setLoading(false);
         }
+
+
     };
 
     return (
@@ -69,9 +58,8 @@ const LoginPage: React.FC = () => {
                     }}
                 >
                     <Image
-                        src="/reto-logo.png"
+                        src="/proyecto-logo.png"
                         alt="Logo"
-                        className="dark:invert"
                         width={500}
                         height={391.6954}
                         priority
@@ -79,7 +67,7 @@ const LoginPage: React.FC = () => {
                     <Typography component="h1" variant="h5">
                         Sign in to your account
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }} method="post">
                         <TextField
                             margin="normal"
                             required
@@ -108,7 +96,8 @@ const LoginPage: React.FC = () => {
                         />
                         {error && (
                             <Typography sx={{ color: 'red', mt: 2 }}>
-                                {error}
+                                {'status' in error && (error as ApiError).data ? (error as ApiError).data.message || 'Login failed. Please check your email and password.' :
+                                    'An unexpected error occurred. Please try again.'}
                             </Typography>
                         )}
                         <FormControlLabel
@@ -120,9 +109,9 @@ const LoginPage: React.FC = () => {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
-                            disabled={loading}
+                            disabled={isLoading}
                         >
-                            {loading ? 'Signing In...' : 'Sign In'}
+                            {isLoading ? 'Signing In...' : 'Sign In'}
                         </Button>
                         <Box display="flex" justifyContent="space-between">
                             <Link href="#" variant="body2">

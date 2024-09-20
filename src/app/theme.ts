@@ -6,10 +6,10 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
     palette: {
         primary: {
-            main: '#212458', // Customize this color
+            main: '#231810', // Customize this color
         },
         secondary: {
-            main: '#dc004e', // Customize this color
+            main: '#FCF3C0', // Customize this color
         },
         background: {
             default: '#f4f6f8', // Background color for the entire dashboard

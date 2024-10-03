@@ -1,6 +1,6 @@
-// src/components/products/ProductRow.tsx
+// src/components/products/ProductRow.t`sx`
 import React, { useState } from 'react';
-import { Product } from '@/types/products'; // Import the type
+import { Product } from '@/types/productsmanagement/products'; // Import the type
 import {
     TableRow,
     TableCell,
@@ -10,8 +10,8 @@ import {
 } from '@mui/material';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { format } from 'date-fns';
-import VariantsTable from './VariantsTable';
-import AddProductVariantButton from "./addProductVariant/AddProductVariantButton";
+import VariantsTable from './variantTable/VariantsTable';
+import AddProductVariantButton  from "../addProductVariant/AddProductVariantButton";
 
 interface ProductRowProps {
     product: Product;
@@ -20,40 +20,44 @@ interface ProductRowProps {
 const ProductRow: React.FC<ProductRowProps> = ({ product }) => {
     const [open, setOpen] = useState(false);
 
-    const totalQuantity = product.variants.reduce(
-        (total, variant) => total + (variant.quantity || 0),
-        0
-    );
-
-    const lastUpdated = product.last_updated
-        ? format(new Date(product.last_updated), 'MM/dd/yyyy')
-        : 'N/A';
-
     const handleToggle = () => {
         setOpen(!open);
     };
 
+    // Format the last updated date
+    const lastUpdated = product.last_updated
+        ? format(new Date(product.last_updated), 'MM/dd/yyyy')
+        : 'N/A';
+
     return (
         <>
             <TableRow>
+                {/* Expand/Collapse Icon */}
                 <TableCell>
                     <IconButton aria-label="expand row" size="small" onClick={handleToggle}>
                         {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
                     </IconButton>
                 </TableCell>
+
+                {/* Product Information */}
                 <TableCell component="th" scope="row">
-                    {product.product_name}
+                    {product.product_id}
                 </TableCell>
-                <TableCell>{product.measurement_name || 'N/A'}</TableCell>
-                <TableCell align="right">{product.variants.length}</TableCell>
-                <TableCell align="right">{totalQuantity}</TableCell>
+                <TableCell>{product.product_name}</TableCell>
+                <TableCell>{product.measurement || 'N/A'}</TableCell>
+                <TableCell align="right">{product.number_of_variants}</TableCell>
+                <TableCell>{product.price_range}</TableCell>
                 <TableCell>{lastUpdated}</TableCell>
-                <TableCell><AddProductVariantButton productId={product.id} product_name={product.product_name} /> </TableCell>
+                <TableCell><AddProductVariantButton  productId={product.product_id} product_name={product.product_name}/></TableCell>
             </TableRow>
+
+            {/* Expandable Row with Variants */}
             <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
-                        <VariantsTable variants={product.variants} />
+                        <Box margin={1}>
+                            <VariantsTable variants={product.variants}  />
+                        </Box>
                     </Collapse>
                 </TableCell>
             </TableRow>

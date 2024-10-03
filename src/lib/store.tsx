@@ -1,19 +1,24 @@
 // src/lib/store.tsx
 
 import { configureStore } from '@reduxjs/toolkit'
-import { authApi } from '@/lib/api';
-import { productsApi} from "@/lib/api";
+import { authApi, productsApi, unitsApi, brandsApi,supplierApi } from '@/lib/api';
 
 export const makeStore = () => {
     return configureStore({
         reducer: {
             [authApi.reducerPath]: authApi.reducer,
             [productsApi.reducerPath]: productsApi.reducer,
+            [unitsApi.reducerPath]: unitsApi.reducer,
+            [brandsApi.reducerPath]: brandsApi.reducer,
+            [supplierApi.reducerPath]: supplierApi.reducer,
         },
         middleware: (getDefaultMiddleware) =>
-            getDefaultMiddleware().concat(authApi.middleware)
-                                  .concat(productsApi.middleware),
-
+            getDefaultMiddleware()
+                .concat(authApi.middleware)
+                .concat(productsApi.middleware)
+                .concat(unitsApi.middleware)
+                .concat(brandsApi.middleware)
+                .concat(supplierApi.middleware)
     })
 }
 

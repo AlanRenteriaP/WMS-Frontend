@@ -80,45 +80,50 @@ const Sidebar: FC = () => {
     const config: Config = {
         admin: [
             {
-                text: 'Home',
+                text: 'Point of Sale',
                 icon: <DashboardIcon sx={iconStyle} />,
-                items: [{ text: 'Dashboard Overview', path: '/dashboard' }],
+                items: [
+                    { text: 'Sales Overview', path: '/dashboard' },
+                    { text: 'Transaction History', path: '/dashboard' },
+                    { text: 'Customers', path: '/dashboard' },
+                ],
+            },
+            {
+                text: 'Inventory Management',
+                icon: <InventoryIcon sx={iconStyle} />,
+                items: [
+                    { text: 'Inventory Levels', path: '/dashboard/productsmanagement/products' },
+                    { text: 'Stock Adjustments', path: '/dashboard/productsmanagement/sourcestores' },
+                    { text: 'Reorder Points', path: '/dashboard/inventory' },
+                ],
             },
             {
                 text: 'Products Management',
-                icon: <InventoryIcon sx={iconStyle} />,
-                items: [
-                    { text: 'Products List', path: '/dashboard/productsmanagement/products' },
-                    { text: 'Source Stores', path: '/dashboard/productsmanagement/sourcestores' },
-                    { text: 'Inventory', path: '/dashboard/inventory' },
-                    { text: 'Price History', path: '/dashboard/price-history' },
-                ],
-            },
-            {
-                text: 'Orders Management',
                 icon: <ShoppingBasketIcon sx={iconStyle} />,
                 items: [
-                    { text: 'New Order', path: '/dashboard/new-order' },
-                    { text: 'View Orders', path: '/dashboard/orders' },
-                    { text: 'Order Summary', path: '/dashboard/order-summary' },
+                    { text: 'Products', path: '/dashboard/productsmanagement/products' },
+                    { text: 'Product Variants', path: '/dashboard/product_variants' },
+                    { text: 'Brands', path: '/dashboard/productsmanagement/brands' },
+                    { text: 'Source Stores', path: '/dashboard/productsmanagement/sourcestores' },
+                    { text: 'Units', path: '/dashboard/order-summary' },
+                    { text: 'Categories', path: '/dashboard/order-summary' },
                 ],
             },
             {
-                text: 'Clients Management',
+                text: 'Purchasing',
                 icon: <PeopleIcon sx={iconStyle} />,
                 items: [
-                    { text: 'Clients List', path: '/dashboard/clients' },
-                    { text: 'Client Stores', path: '/dashboard/client-stores' },
-                    { text: 'Store Contacts', path: '/dashboard/store-contacts' },
+                    { text: 'Purchase Orders', path: '/dashboard/clients' },
+                    { text: 'Suppliers', path: '/dashboard/client-stores' },
                 ],
             },
             {
-                text: 'Routes Management',
+                text: 'Recipes',
                 icon: <AssignmentIcon sx={iconStyle} />,
                 items: [
-                    { text: 'Routes List', path: '/dashboard/routes' },
-                    { text: 'Route Schedules', path: '/dashboard/route-schedules' },
-                    { text: 'Route Clients', path: '/dashboard/route-clients' },
+                    { text: 'Add Recipe', path: '/dashboard/routes' },
+                    { text: 'Manage Recipes', path: '/dashboard/route-schedules' },
+                    { text: 'Manage Ingredients', path: '/dashboard/route-clients' },
                 ],
             },
             {
@@ -130,9 +135,13 @@ const Sidebar: FC = () => {
                 ],
             },
             {
-                text: 'Reports',
+                text: 'Reports and Analytics',
                 icon: <DashboardIcon sx={iconStyle} />,
-                items: [{ text: 'Customizable Reports', path: '/dashboard/reports' }],
+                items: [
+                    { text: 'Sales Reports', path: '/dashboard/reports' },
+                    { text: 'Inventory Reports', path: '/dashboard/reports' },
+                    { text: 'Purchase Reports ', path: '/dashboard/reports' }
+                ],
             },
             {
                 text: 'Settings',

@@ -1,6 +1,5 @@
-// src/app/dashboard/products/ProductsTable.tsx
 import React, { useState } from 'react';
-import { useGetProductsWithVariantsQuery } from '@/lib/api/products/productsApiSlice';
+import { useGetProductsOverviewQuery } from '@/lib/api/productsmanagement/productsApiSlice';
 import {
     CircularProgress,
     TextField,
@@ -13,12 +12,13 @@ import {
     TableHead,
     TableRow,
     Paper,
+    Button,
 } from '@mui/material';
-import ProductRow from './components/ProductRow'; // Import ProductRow component
-import { Product } from '@/types/products'; // Import Product type
+import ProductRow from './ProductRow'; // Import ProductRow component
+import { Product } from '@/types/productsmanagement/products'; // Import Product type
 
 const ProductsTable = () => {
-    const { data: products, error, isLoading } = useGetProductsWithVariantsQuery();
+    const { data: products, error, isLoading } = useGetProductsOverviewQuery();
     const [search, setSearch] = useState('');
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,10 +39,7 @@ const ProductsTable = () => {
         return <Typography color="error">Error fetching products</Typography>;
 
     return (
-        <Box sx={{ maxWidth: 800, mx: 'auto', mt: 4, p: 2 }}>
-            <Typography variant="h4" gutterBottom>
-                Products
-            </Typography>
+        <Box>
             <TextField
                 fullWidth
                 label="Search Products"
@@ -55,18 +52,19 @@ const ProductsTable = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell /> {/* Empty cell for expand/collapse button */}
+                            <TableCell />{/* Empty cell for expand/collapse button */}
+                            <TableCell>Product ID</TableCell>
                             <TableCell>Product Name</TableCell>
                             <TableCell>Measurement</TableCell>
                             <TableCell align="right">Number of Variants</TableCell>
-                            <TableCell align="right">Total Quantity</TableCell>
+                            <TableCell align="right">Price Range</TableCell>
                             <TableCell>Last Updated</TableCell>
                             <TableCell>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {filteredProducts?.map((product: Product) => (
-                            <ProductRow key={product.id} product={product} />
+                            <ProductRow key={product.product_id} product={product} />
                         ))}
                     </TableBody>
                 </Table>
@@ -76,3 +74,8 @@ const ProductsTable = () => {
 };
 
 export default ProductsTable;
+
+
+
+
+

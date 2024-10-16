@@ -1,8 +1,10 @@
+// @/types/producstmanagement/units.tsx
 
-
-export interface Unit {
-    unit_id: number | null; // Universal Product Code, if applicable
+export interface Units {// Database Table
+    unit_id: number;
     unit_name:string;
-    unit_type: number | null; // Current price of the variant, if applicable
-    conversion_factor_to_base: number | null;
+    abbreviation: string;
+    unit_type: number;
+    conversion_factor_to_base: number;
 }
+

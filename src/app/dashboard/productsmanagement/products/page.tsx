@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import ProductsTable from "./components/productstable/ProductsTable";
+import ProductsTable from "@/app/dashboard/productsmanagement/products/productstable/ProductsTable";
 import {Box, Button, Typography,Container} from "@mui/material";
 
 const Products: React.FC = () => {

@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Product, ProductVariantInput } from '@/types/productsmanagement/products'; // Ensure correct import path
+import { Product, ProductVariantInput,UpdateVariantInput } from '@/types/productsmanagement/products'; // Ensure correct import path
 
 export const productsApi = createApi({
     reducerPath: 'productsApi',
@@ -19,7 +19,6 @@ export const productsApi = createApi({
                 },
             }),
             transformResponse: (response: { products: any[] }): Product[] => {
-                // Map the response to the expected Product interface
                 return response.products.map((product) => ({
                     product_id: product.product_id,
                     product_name: product.product_name,
@@ -27,16 +26,19 @@ export const productsApi = createApi({
                     measurement: product.measurement,
                     number_of_variants: parseInt(product.number_of_variants, 10),
                     price_range: product.price_range,
-                    last_updated: new Date(product.last_updated).toISOString(), // Use as string or convert to Date if needed
-                    // Type-check and transform each variant
+                    last_updated: new Date(product.last_updated).toISOString(),
                     variants: (product.variants || []).map((variant: any) => ({
                         variant_id: variant.variant_id,
-                        upc: variant.upc ?? null, // Ensure null if undefined
+                        upc: variant.upc ?? null,
+                        package_size: variant.package_size,
                         brand: variant.brand,
-                        price: variant.price ?? null, // Ensure null if undefined
+                        brand_id: variant.brand_id ?? 0, // Ensure brand_id is included
+                        price: variant.price ?? null,
                         supplier: variant.supplier,
-                        is_default: Boolean(variant.is_default), // Convert to boolean
-                        last_updated: new Date(variant.last_updated).toISOString(), // Convert to Date object
+                        supplier_id: variant.supplier_id ?? 0, // Ensure supplier_id is included
+                        unit_id: variant.unit_id ?? 0, // Ensure unit_id is included
+                        is_default: Boolean(variant.is_default),
+                        last_updated: new Date(variant.last_updated).toISOString(),
                         presentation: variant.presentation,
                     })),
                 }));
@@ -55,10 +57,37 @@ export const productsApi = createApi({
             }),
             invalidatesTags: [{ type: 'Products', id: 'LIST' }], // Invalidate the products list to trigger a refetch
         }),
+        // Add the mutation to set a variant as active
+        setVariantActive: builder.mutation<void, { product_id: number, variant_id: number }>({
+            query: ({ product_id, variant_id }) => ({
+                url: `/productsmanagement/products/setActive/${product_id}`,
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: { default_variant_id: variant_id }, // Update the product's default_variant_id
+            }),
+            invalidatesTags: [{ type: 'Products', id: 'LIST' }],
+        }),
+        updateProductVariant: builder.mutation<void, { id: number, data: UpdateVariantInput  }>({
+            query: ({ id, data }) => ({
+                url: `/productsmanagement/productvariants/updatevariant/${id}`,
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: data,
+            }),
+            invalidatesTags: [{ type: 'Products', id: 'LIST' }],
+        }),
+
     }),
 });
 
 export const {
     useGetProductsOverviewQuery,
-    useAddProductVariantMutation, // Export the mutation hook
+    useAddProductVariantMutation,
+    useSetVariantActiveMutation, // Add this line
+    useUpdateProductVariantMutation, // Export the update mutation hook
 } = productsApi;
+

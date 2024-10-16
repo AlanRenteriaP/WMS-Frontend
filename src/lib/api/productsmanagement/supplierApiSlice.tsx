@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Suppliers } from '@/types/productsmanagement/suppliers';
+import { Suppliers,SupplierInput } from '@/types/productsmanagement';
 
 export const supplierApi = createApi({
     reducerPath: 'supplierApi',
@@ -11,15 +11,27 @@ export const supplierApi = createApi({
     endpoints: (builder) => ({
         getSuppliers: builder.query<Suppliers[], void>({
             query: () => ({
-                url: '/productsmanagement/supplierstores/getstores',
+                url: '/productsmanagement/suppliers/overview',
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
             }),
             transformResponse: (response: { suppliers: Suppliers[] }): Suppliers[] => response.suppliers,
+            providesTags: ['Suppliers'],
+        }),
+        addSupplier: builder.mutation<Suppliers, SupplierInput>({
+            query: (newSupplier) => ({
+                url: '/productsmanagement/suppliers/addsupplier',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: newSupplier,
+            }),
+            invalidatesTags: ['Suppliers'],
         }),
     }),
 });
 
-export const { useGetSuppliersQuery } = supplierApi;
+export const { useGetSuppliersQuery, useAddSupplierMutation } = supplierApi;

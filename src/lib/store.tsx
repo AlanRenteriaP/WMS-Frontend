@@ -1,7 +1,11 @@
 // src/lib/store.tsx
 
 import { configureStore } from '@reduxjs/toolkit'
-import { authApi, productsApi, unitsApi, brandsApi,supplierApi } from '@/lib/api';
+import { authApi } from '@/lib/api/auth/authApiSlice';
+import { unitsApi } from '@/lib/api/productsmanagement/unitsApiSlice';
+import {productsApi} from '@/lib/api/productsmanagement/productsApiSlice';
+import {brandsApi} from '@/lib/api/productsmanagement/brandsApiSlice';
+import {supplierApi} from '@/lib/api/productsmanagement/supplierApiSlice';
 
 export const makeStore = () => {
     return configureStore({

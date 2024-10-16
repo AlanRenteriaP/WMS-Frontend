@@ -1,6 +1,12 @@
+// @/types/producstmanagement/brands.tsx
+import {Ingredients} from './ingredients';
 
-
-export interface Brand {
-    brand_id: number | null; // Universal Product Code, if applicable
-    brand_name:string | null;
+// Brands Types
+export interface Brands { // Database Table
+    brand_id: number | null;
+    brand_name: string | null;
+    // everything after is optional
+    number_of_ingredients?: number;
+    number_of_products?: number;
+    ingredients?: Ingredients[];
 }

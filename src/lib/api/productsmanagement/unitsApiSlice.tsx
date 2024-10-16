@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Unit } from '@/types/productsmanagement/units';
+import { Units } from '@/types/productsmanagement';
 
 export const unitsApi = createApi({
     reducerPath: 'unitsApi',
@@ -9,7 +9,7 @@ export const unitsApi = createApi({
     }),
     tagTypes: ['Units'],
     endpoints: (builder) => ({
-        getUnits: builder.query<Unit[], void>({
+        getUnits: builder.query<Units[], void>({
             query: () => ({
                 url: '/productsmanagement/units/getunits',
                 method: 'GET',
@@ -17,7 +17,7 @@ export const unitsApi = createApi({
                     'Content-Type': 'application/json',
                 }
             }),
-            transformResponse: (response: { units: Unit[] }): Unit[] => response.units,
+            transformResponse: (response: { units: Units[] }): Units[] => response.units,
         })
     }),
 });

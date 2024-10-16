@@ -79,70 +79,69 @@ const Sidebar: FC = () => {
 
     const config: Config = {
         admin: [
-            {
-                text: 'Point of Sale',
-                icon: <DashboardIcon sx={iconStyle} />,
-                items: [
-                    { text: 'Sales Overview', path: '/dashboard' },
-                    { text: 'Transaction History', path: '/dashboard' },
-                    { text: 'Customers', path: '/dashboard' },
-                ],
-            },
-            {
-                text: 'Inventory Management',
-                icon: <InventoryIcon sx={iconStyle} />,
-                items: [
-                    { text: 'Inventory Levels', path: '/dashboard/productsmanagement/products' },
-                    { text: 'Stock Adjustments', path: '/dashboard/productsmanagement/sourcestores' },
-                    { text: 'Reorder Points', path: '/dashboard/inventory' },
-                ],
-            },
+            // {
+            //     text: 'Point of Sale',
+            //     icon: <DashboardIcon sx={iconStyle} />,
+            //     items: [
+            //         { text: 'Sales Overview', path: '/dashboard' },
+            //         { text: 'Transaction History', path: '/dashboard' },
+            //         { text: 'Customers', path: '/dashboard' },
+            //     ],
+            // },
+            // {
+            //     text: 'Inventory Management',
+            //     icon: <InventoryIcon sx={iconStyle} />,
+            //     items: [
+            //         { text: 'Inventory Levels', path: '/dashboard/productsmanagement/products' },
+            //         { text: 'Stock Adjustments', path: '/dashboard/productsmanagement/sourcestores' },
+            //         { text: 'Reorder Points', path: '/dashboard/inventory' },
+            //     ],
+            // },
             {
                 text: 'Products Management',
                 icon: <ShoppingBasketIcon sx={iconStyle} />,
                 items: [
-                    { text: 'Products', path: '/dashboard/productsmanagement/products' },
-                    { text: 'Product Variants', path: '/dashboard/product_variants' },
+                    { text: 'Ingredients', path: '/dashboard/productsmanagement/products' },
+                    { text: 'Products', path: '/dashboard/product_variants' },
                     { text: 'Brands', path: '/dashboard/productsmanagement/brands' },
-                    { text: 'Source Stores', path: '/dashboard/productsmanagement/sourcestores' },
-                    { text: 'Units', path: '/dashboard/order-summary' },
-                    { text: 'Categories', path: '/dashboard/order-summary' },
+                    { text: 'Supplier Stores', path: '/dashboard/productsmanagement/suppliers' },
+                    { text: 'Units', path: '/dashboard/productsmanagement/units' },
                 ],
             },
-            {
-                text: 'Purchasing',
-                icon: <PeopleIcon sx={iconStyle} />,
-                items: [
-                    { text: 'Purchase Orders', path: '/dashboard/clients' },
-                    { text: 'Suppliers', path: '/dashboard/client-stores' },
-                ],
-            },
-            {
-                text: 'Recipes',
-                icon: <AssignmentIcon sx={iconStyle} />,
-                items: [
-                    { text: 'Add Recipe', path: '/dashboard/routes' },
-                    { text: 'Manage Recipes', path: '/dashboard/route-schedules' },
-                    { text: 'Manage Ingredients', path: '/dashboard/route-clients' },
-                ],
-            },
-            {
-                text: 'User Management',
-                icon: <PeopleIcon sx={iconStyle} />,
-                items: [
-                    { text: 'User Profiles', path: '/dashboard/users' },
-                    { text: 'Role Assignments', path: '/dashboard/roles' },
-                ],
-            },
-            {
-                text: 'Reports and Analytics',
-                icon: <DashboardIcon sx={iconStyle} />,
-                items: [
-                    { text: 'Sales Reports', path: '/dashboard/reports' },
-                    { text: 'Inventory Reports', path: '/dashboard/reports' },
-                    { text: 'Purchase Reports ', path: '/dashboard/reports' }
-                ],
-            },
+            // {
+            //     text: 'Purchasing',
+            //     icon: <PeopleIcon sx={iconStyle} />,
+            //     items: [
+            //         { text: 'Purchase Orders', path: '/dashboard/clients' },
+            //         { text: 'Suppliers', path: '/dashboard/client-stores' },
+            //     ],
+            // },
+            // {
+            //     text: 'Recipes',
+            //     icon: <AssignmentIcon sx={iconStyle} />,
+            //     items: [
+            //         { text: 'Add Recipe', path: '/dashboard/routes' },
+            //         { text: 'Manage Recipes', path: '/dashboard/route-schedules' },
+            //         { text: 'Manage Ingredients', path: '/dashboard/route-clients' },
+            //     ],
+            // },
+            // {
+            //     text: 'User Management',
+            //     icon: <PeopleIcon sx={iconStyle} />,
+            //     items: [
+            //         { text: 'User Profiles', path: '/dashboard/users' },
+            //         { text: 'Role Assignments', path: '/dashboard/roles' },
+            //     ],
+            // },
+            // {
+            //     text: 'Reports and Analytics',
+            //     icon: <DashboardIcon sx={iconStyle} />,
+            //     items: [
+            //         { text: 'Sales Reports', path: '/dashboard/reports' },
+            //         { text: 'Inventory Reports', path: '/dashboard/reports' },
+            //         { text: 'Purchase Reports ', path: '/dashboard/reports' }
+            //     ],
+            // },
             {
                 text: 'Settings',
                 icon: <SettingsIcon sx={iconStyle} />,

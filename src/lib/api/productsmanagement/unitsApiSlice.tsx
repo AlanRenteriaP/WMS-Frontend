@@ -1,13 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Units } from '@/types/productsmanagement';
-
+import {tagTypes} from "./Types/tagTypes";
 export const unitsApi = createApi({
     reducerPath: 'unitsApi',
     baseQuery: fetchBaseQuery({
         baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
         credentials: 'include',
     }),
-    tagTypes: ['Units'],
+    tagTypes: tagTypes,
     endpoints: (builder) => ({
         getUnits: builder.query<Units[], void>({
             query: () => ({

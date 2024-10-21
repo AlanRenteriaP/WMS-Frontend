@@ -10,3 +10,7 @@ export interface Brands { // Database Table
     number_of_products?: number;
     ingredients?: Ingredients[];
 }
+
+export interface BrandInput {
+    brand_name: string;
+}

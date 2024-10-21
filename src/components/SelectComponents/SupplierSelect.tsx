@@ -6,22 +6,23 @@ import {
     MenuItem,
     SelectChangeEvent,
 } from '@mui/material';
-import { useGetSuppliersQuery } from '@/lib/api';
+import { useGetSuppliersQuery } from '@/lib/api/productsmanagement/supplierApiSlice';
 
 interface SupplierSelectProps {
     value: number; // Use only number type
     onChange: (e: SelectChangeEvent<number>) => void; // Use SelectChangeEvent<number>
     disabled?: boolean;
+    name: string
 }
 
-const SupplierSelect: React.FC<SupplierSelectProps> = ({ value, onChange, disabled }) => {
+const SupplierSelect: React.FC<SupplierSelectProps> = ({ value, onChange, disabled ,name}) => {
     const { data: suppliers, isLoading: isSuppliersLoading, error: suppliersError } = useGetSuppliersQuery();
 
     return (
         <FormControl fullWidth>
             <InputLabel>Supplier</InputLabel>
             <Select
-                name="supplier"
+                name={name}
                 value={value !== 0 ? value : ''} // Default to empty string if value is 0 (assuming 0 isn't a valid `supplier_id`)
                 onChange={onChange}
                 label="Supplier"

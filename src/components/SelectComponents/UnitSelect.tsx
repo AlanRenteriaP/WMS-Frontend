@@ -1,29 +1,33 @@
+// UnitSelect.tsx
+
 import React from 'react';
 import {
     FormControl,
     InputLabel,
     Select,
     MenuItem,
-    SelectChangeEvent, // Import SelectChangeEvent type from MUI
+    SelectChangeEvent,
 } from '@mui/material';
-import { useGetUnitsQuery } from '@/lib/api/productsmanagement';
+import { useGetUnitsQuery } from '@/lib/api/productsmanagement/unitsApiSlice';
+// UnitSelect.tsx
 
 interface UnitSelectProps {
-    value: number; // Use only number type
-    onChange: (e: SelectChangeEvent<number>) => void; // Use SelectChangeEvent<number> instead
+    value: number;
+    onChange: (e: SelectChangeEvent<number>) => void;
     disabled?: boolean;
+    name: string;
 }
 
-const UnitSelect: React.FC<UnitSelectProps> = ({ value, onChange, disabled }) => {
+const UnitSelect: React.FC<UnitSelectProps> = ({ value, onChange, disabled, name }) => {
     const { data: units, isLoading: isUnitsLoading, error: unitsError } = useGetUnitsQuery();
 
     return (
-        <FormControl fullWidth>
+        <FormControl fullWidth >
             <InputLabel>Unit</InputLabel>
             <Select
-                name="unit"
-                value={value !== 0 ? value : ''} // Default to empty string if value is 0 (assuming 0 isn't a valid `unit_id`)
-                onChange={onChange} // No change needed here
+                name={name}
+                value={value !== 0 ? value : ''}
+                onChange={onChange}
                 label="Unit"
                 variant="outlined"
                 disabled={isUnitsLoading || !!unitsError || disabled}
@@ -34,7 +38,7 @@ const UnitSelect: React.FC<UnitSelectProps> = ({ value, onChange, disabled }) =>
                     <MenuItem value="">Error loading units</MenuItem>
                 ) : (
                     units?.map((unit) => (
-                        <MenuItem key={unit.unit_id} value={unit.unit_id || ''}>
+                        <MenuItem key={unit.unit_id} value={unit.unit_id}>
                             {unit.unit_name}
                         </MenuItem>
                     ))

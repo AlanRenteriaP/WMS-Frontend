@@ -6,22 +6,23 @@ import {
     MenuItem,
     SelectChangeEvent,
 } from '@mui/material';
-import { useGetBrandsQuery } from '@/lib/api';
+import { useGetBrandsQuery } from '@/lib/api/productsmanagement/brandsApiSlice';
 
 interface BrandSelectProps {
     value: number; // Use only number type
     onChange: (e: SelectChangeEvent<number>) => void; // Use SelectChangeEvent<number>
     disabled?: boolean;
+    name:string
 }
 
-const BrandSelect: React.FC<BrandSelectProps> = ({ value, onChange, disabled }) => {
+const BrandSelect: React.FC<BrandSelectProps> = ({ value, onChange, disabled , name }) => {
     const { data: brands, isLoading: isBrandsLoading, error: brandsError } = useGetBrandsQuery();
 
     return (
         <FormControl fullWidth>
             <InputLabel>Brand</InputLabel>
             <Select
-                name="brand"
+                name={name}
                 value={value !== 0 ? value : ''} // Default to empty string if value is 0 (assuming 0 isn't a valid `brand_id`)
                 onChange={onChange}
                 label="Brand"

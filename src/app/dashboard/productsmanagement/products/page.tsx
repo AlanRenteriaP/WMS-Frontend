@@ -1,9 +1,22 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import ProductsTable from "@/app/dashboard/productsmanagement/products/productstable/ProductsTable";
-import {Box, Button, Typography,Container} from "@mui/material";
-
+import {Box, Button, Typography, Container, CircularProgress} from "@mui/material";
+import {  useGetAllProductsQuery } from '@/lib/api/productsmanagement/productsApiSlice';
+import AddProductButton from "@/components/AddButtons/addProductsButton/AddProductButton";
 const Products: React.FC = () => {
+       const { data: productsData, error, isLoading } = useGetAllProductsQuery();
+
+    if (isLoading)
+        return (
+            <Box display="flex" justifyContent="center">
+                <CircularProgress />
+            </Box>
+        );
+
+    if (error)
+        return <Typography color="error">Error fetching products </Typography>;
+
 
     return (
         <Container maxWidth="lg" sx={{ mt: 4, p: 2 }}>
@@ -11,12 +24,10 @@ const Products: React.FC = () => {
                 <Typography variant="h4" gutterBottom>
                     Products
                 </Typography>
-                <Button variant="contained" color="success">
-                    Add Product
-                </Button>
+              {/*<AddProductButton   />*/}
             </Box>
 
-            <ProductsTable />
+            <ProductsTable products={productsData!} />
         </Container>
     );
 };

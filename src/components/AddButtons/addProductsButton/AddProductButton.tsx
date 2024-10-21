@@ -1,19 +1,17 @@
-// src/SelectComponents/products/AddProductVariantButton.tsx
+// src/SelectComponents/products/AddProductButton.tsx
 
 import React, { useState } from 'react';
 import { Button, Box } from '@mui/material';
-import AddProductVariantModal from './AddProductVariantModal';
+import AddProductModal from './AddProductModal';
+import useToggle from "@/common/useToggle";
+import { Ingredients } from '@/types/productsmanagement/ingredients'
 
-interface AddProductVariantButtonProps {
-    productId: number;
-    product_name: string;
+interface AddProductProps {
+    ingredient: Omit<Ingredients, 'products'>; // Exclude 'products' from Ingredients
 }
 
-const AddProductVariantButton: React.FC<AddProductVariantButtonProps> = ({ productId, product_name }) => {
-    const [open, setOpen] = useState(false);
-
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+const AddProductButton: React.FC<AddProductProps>  = ( {ingredient }) => {
+    const { open, handleOpen, handleClose, toggle } = useToggle();
 
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
@@ -30,16 +28,16 @@ const AddProductVariantButton: React.FC<AddProductVariantButtonProps> = ({ produ
                     },
                 }}
             >
-                Add Product Variant
+                Add Product
             </Button>
-            <AddProductVariantModal
+            <AddProductModal
                 open={open}
                 onClose={handleClose}
-                productId={productId}
-                product_name={product_name}
+
+                ingredientInfo={ingredient}
             />
         </Box>
     );
 };
 
-export default AddProductVariantButton;
+export default AddProductButton;

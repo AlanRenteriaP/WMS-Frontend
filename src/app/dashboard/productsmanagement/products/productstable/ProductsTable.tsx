@@ -1,81 +1,45 @@
 import React, { useState } from 'react';
-import { useGetProductsOverviewQuery } from '@/lib/api/productsmanagement/productsApiSlice';
-import {
-    CircularProgress,
-    TextField,
-    Typography,
-    Box,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    Button,
-} from '@mui/material';
-import ProductRow from './ProductRow'; // Import IngredientRow component
-import { Product } from '@/types/productsmanagement/products'; // Import Product type
+import GenericTable from "@/components/table/genericTable";
+import { Products } from '@/types/productsmanagement/products';
+import { productsColumns } from "@/common/constants/table/columns";
+import ProductModal from "@/components/modals/ProductModal/ProductModal";
 
-const ProductsTable = () => {
-    const { data: products, error, isLoading } = useGetProductsOverviewQuery();
-    const [search, setSearch] = useState('');
+interface ProductsTableProps {
+    products: Products[];
+}
 
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearch(event.target.value.toLowerCase());
+const ProductsTable: React.FC<ProductsTableProps> = ({ products }) => {
+    const [selectedProduct, setSelectedProduct] = useState<Products | null>(null); // State to track the selected product
+    const [isModalOpen, setIsModalOpen] = useState(false); // State to manage modal visibility
+
+    const handleRowClick = (rowData: Products) => {
+        setSelectedProduct(rowData); // Set the clicked row's data
+        setIsModalOpen(true); // Open the modal
     };
 
-    const filteredProducts = products?.filter((product: Product) =>
-        product.product_name.toLowerCase().includes(search)
-    );
-
-    if (isLoading)
-        return (
-            <Box display="flex" justifyContent="center">
-                <CircularProgress />
-            </Box>
-        );
-    if (error)
-        return <Typography color="error">Error fetching products</Typography>;
+    const handleCloseModal = () => {
+        setIsModalOpen(false); // Close the modal
+        setSelectedProduct(null); // Reset the selected product
+    };
 
     return (
-        <Box>
-            <TextField
-                fullWidth
-                label="Search Products"
-                variant="outlined"
-                value={search}
-                onChange={handleSearchChange}
-                sx={{ mb: 3 }}
+        <>
+            {/* Render GenericTable with row click handling */}
+            <GenericTable
+                data={products}
+                columns={productsColumns}
+                onRowClick={handleRowClick} // Pass the row click handler
+                enableRowClick={true} // Ensure rows are clickable
             />
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell />{/* Empty cell for expand/collapse button */}
-                            <TableCell>Product ID</TableCell>
-                            <TableCell>Product Name</TableCell>
-                            <TableCell>Measurement</TableCell>
-                            <TableCell align="right">Number of Variants</TableCell>
-                            <TableCell align="right">Price Range</TableCell>
-                            <TableCell>Last Updated</TableCell>
-                            <TableCell>Actions</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredProducts?.map((product: Product) => (
-                            <ProductRow key={product.product_id} product={product} />
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </Box>
+
+            {/* Render ProductModal and pass relevant props */}
+            <ProductModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                product={selectedProduct}
+            />
+        </>
     );
 };
 
 export default ProductsTable;
-
-
-
-
-

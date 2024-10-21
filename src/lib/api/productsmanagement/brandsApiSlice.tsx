@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Brand, Ingredients,Products } from '@/types/productsmanagement/brands';
+import {Brands, BrandInput} from '@/types/productsmanagement';
+import {tagTypes} from "./Types/tagTypes";
 
 
 
@@ -9,19 +10,20 @@ export const brandsApi = createApi({
         baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
         credentials: 'include',
     }),
-    tagTypes: ['Brands'],
+    tagTypes: tagTypes,
     endpoints: (builder) => ({
-        getBrands: builder.query<Brand[], void>({
+        getBrands: builder.query<Brands[], void>({
             query: () => ({
-                url: '/productsmanagement/brands',
+                url: '/productsmanagement/brands/all',
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 }
             }),
-            transformResponse: (response: { brands: Brand[] }): Brand[] => response.brands,
+            transformResponse: (response: { brands: Brands[] }): Brands[] => response.brands,
+            providesTags: ['Brands'],
         }),
-        getProductsOverview: builder.query<Brand[], void>({
+        getBrandsOverview: builder.query<Brands[], void>({
             query: () => ({
                 url: '/productsmanagement/brands/overview',
                 method: 'GET',
@@ -29,9 +31,21 @@ export const brandsApi = createApi({
                     'Content-Type': 'application/json',
                 }
             }),
-            transformResponse: (response: { brands: Brand[] }): Brand[] => response.brands,
+            transformResponse: (response: { brands: Brands[] }): Brands[] => response.brands,
+            providesTags: ['BrandOverview'],
         }),
+        addBrand: builder.mutation<Brands, BrandInput>({
+            query: (newBrand) => ({
+                url: '/productsmanagement/brands/addbrand',
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: newBrand,
+            }),
+            invalidatesTags: ['BrandOverview', 'Brands'],
+        })
     }),
 });
 
-export const { useGetBrandsQuery, useGetProductsOverviewQuery } = brandsApi;
+export const { useGetBrandsQuery, useGetBrandsOverviewQuery, useAddBrandMutation } = brandsApi;

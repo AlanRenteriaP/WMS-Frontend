@@ -3,10 +3,10 @@ import React from 'react';
 import BrandTable from './brandsTable';
 import AddBrandButton from "@/components/AddButtons/addBrandButton";
 import {Typography, Box, CircularProgress} from "@mui/material";
-import { useGetProductsOverviewQuery } from '@/lib/api/productsmanagement/brandsApiSlice';
+import { useGetBrandsOverviewQuery } from '@/lib/api/productsmanagement/brandsApiSlice';
 
 const BrandsPage = () => {
-        const { data: brandsData,error,isLoading } = useGetProductsOverviewQuery();
+        const { data: brandsData,error,isLoading } = useGetBrandsOverviewQuery();
 
     if (isLoading)
         return (

@@ -101,8 +101,8 @@ const Sidebar: FC = () => {
                 text: 'Products Management',
                 icon: <ShoppingBasketIcon sx={iconStyle} />,
                 items: [
-                    { text: 'Ingredients', path: '/dashboard/productsmanagement/products' },
-                    { text: 'Products', path: '/dashboard/product_variants' },
+                    { text: 'Ingredients', path: '/dashboard/productsmanagement/ingredients' },
+                    { text: 'Products', path: '/dashboard/productsmanagement/products' },
                     { text: 'Brands', path: '/dashboard/productsmanagement/brands' },
                     { text: 'Supplier Stores', path: '/dashboard/productsmanagement/suppliers' },
                     { text: 'Units', path: '/dashboard/productsmanagement/units' },

@@ -8,27 +8,28 @@ import {
     TextField,
     Box,
 } from '@mui/material';
-import UnitSelect from '@/app/dashboard/productsmanagement/products/SelectComponents/UnitSelect';
-import BrandSelect from '@/app/dashboard/productsmanagement/products/SelectComponents/BrandSelect';
-import SupplierSelect from '@/app/dashboard/productsmanagement/products/SelectComponents/SupplierSelect';
-import { useAddProductVariantMutation } from '@/lib/api';
-import { ProductVariantInput } from '@/types/productsmanagement/products';
+import UnitSelect from '@/components/SelectComponents/UnitSelect';
+import BrandSelect from '@/components/SelectComponents/BrandSelect';
+import SupplierSelect from '@/components/SelectComponents/SupplierSelect';
+import { useAddProductMutation  } from '@/lib/api/productsmanagement/productsApiSlice';
+import { useGetIngredientsOverviewQuery} from "@/lib/api/productsmanagement/ingredientsApiSlice";
+import {useGetBrandsOverviewQuery } from "@/lib/api/productsmanagement/brandsApiSlice";
+import { AddProductInput } from '@/types/productsmanagement/products';
+import { Ingredients } from '@/types/productsmanagement/ingredients'
+
 
 interface AddProductVariantModalProps {
     open: boolean;
     onClose: () => void;
-    productId: number;
-    product_name: string;
+    ingredientInfo: Omit<Ingredients, 'products'>;
 }
 
-const AddProductVariantModal: React.FC<AddProductVariantModalProps> = ({
+const AddProductModal: React.FC<AddProductVariantModalProps> = ({
                                                                            open,
-                                                                           onClose,
-                                                                           productId,
-                                                                           product_name,
+                                                                           onClose,ingredientInfo
                                                                        }) => {
 
-    const [variantData, setVariantData] = useState<Omit<ProductVariantInput, 'product_id'>>({
+    const [productData, setProductData] = useState({
         unit_id: 0,
         supplier_id: 0,
         brand_id: 0,
@@ -37,50 +38,52 @@ const AddProductVariantModal: React.FC<AddProductVariantModalProps> = ({
     });
 
 
-
-    const [addProductVariant, { isLoading }] = useAddProductVariantMutation();
-
+    const [addProduct, { isLoading }] = useAddProductMutation();
+    const { refetch: refetchIngredients } = useGetIngredientsOverviewQuery();
+    const {refetch: refetchBrands } =  useGetBrandsOverviewQuery();
     // Handle changes for text fields
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setVariantData({
-            ...variantData,
-            [name]: name === 'package_size' || name === 'price' ? parseFloat(value) : value,
+
+        setProductData({
+            ...productData,
+            [name]: name === 'package_size' ? parseFloat(value) : value,
         });
     };
 
     // Handle changes for select fields (e.g., Unit, Brand, Supplier)
     const handleSelectChange = (name: string, value: number) => {
-        setVariantData({
-            ...variantData,
+        setProductData({
+            ...productData,
             [name]: value,
         });
     };
 
 
     // Handle submitting the form
-    const handleAddVariant = async () => {
+    const handleAddProduct = async () => {
         // Validate that all required fields are filled
-        if (!variantData.unit_id || !variantData.supplier_id || !variantData.brand_id) {
+        if (!productData.unit_id || !productData.package_size || !productData.brand_id) {
             alert("Please fill out all required fields.");
             return;
         }
 
         // Prepare the request payload
-        const payload: ProductVariantInput = {
-            product_id: productId,
-            unit_id: variantData.unit_id,
-            supplier_id: variantData.supplier_id,
-            brand_id: variantData.brand_id,
-            package_size: variantData.package_size,
-            price: variantData.price,
+        const payload: AddProductInput = {
+            brand_id: productData.brand_id,
+            package_size: productData.package_size,
+            unit_id: productData.unit_id,
+            ingredient_id: ingredientInfo.ingredient_id
         };
 
         console.log('Payload being sent:', payload); // Log the payload to check if everything is correct
 
         try {
             // Call the mutation function
-            await addProductVariant(payload).unwrap();
+            const result = await addProduct(payload).unwrap();
+            console.log('Product added successfully:', result);
+            refetchIngredients();
+            refetchBrands();
             onClose();
         } catch (error: any) {
             console.error('Error adding variant:', error.message);
@@ -90,9 +93,7 @@ const AddProductVariantModal: React.FC<AddProductVariantModalProps> = ({
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-            <DialogTitle>
-                Add Variant to <strong>{product_name}</strong>
-            </DialogTitle>
+            {ingredientInfo.ingredient_name}
             <DialogContent dividers>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     <Box sx={{ display: 'flex', gap: 2 }}>
@@ -100,36 +101,26 @@ const AddProductVariantModal: React.FC<AddProductVariantModalProps> = ({
                             fullWidth
                             label="Package Size"
                             name="package_size"
-                            value={variantData.package_size}
+                            value={productData.package_size}
                             onChange={handleInputChange}
                             type="number" // Ensure the input is numerical
                         />
                         <UnitSelect
-                            value={variantData.unit_id} // Pass the value as a number
+                            name="unit"
+                            value={productData.unit_id} // Pass the value as a number
                             onChange={(e) => handleSelectChange('unit_id', parseInt(e.target.value as string, 10))}
                             disabled={isLoading}
                         />
 
                     </Box>
-                    <Box sx={{ display: 'flex', gap: 2 }}>
-                        <TextField
-                            fullWidth
-                            label="Price"
-                            name="price"
-                            value={variantData.price}
-                            onChange={handleInputChange}
-                            type="number"
-                        />
-                    </Box>
+
                     <Box sx={{ display: 'flex', gap: 2 }}>
                         <BrandSelect
-                            value={variantData.brand_id} // Provide a default empty value if not set
+                            name="unit_id"
+                            value={productData.brand_id} // Provide a default empty value if not set
                             onChange={(e) => handleSelectChange('brand_id',parseInt(e.target.value as string, 10))}
                         />
-                        <SupplierSelect
-                            value={variantData.supplier_id} // Provide a default empty value if not set
-                            onChange={(e) => handleSelectChange('supplier_id',parseInt(e.target.value as string, 10))}
-                        />
+
                     </Box>
                 </Box>
             </DialogContent>
@@ -139,14 +130,14 @@ const AddProductVariantModal: React.FC<AddProductVariantModalProps> = ({
                 </Button>
                 <Button
                     variant="contained"
-                    onClick={handleAddVariant}
+                    onClick={handleAddProduct}
                     disabled={isLoading}
                 >
-                    {isLoading ? 'Adding...' : 'Add Variant'}
+                    {isLoading ? 'Adding...' : 'Add Product'}
                 </Button>
             </DialogActions>
         </Dialog>
     );
 };
 
-export default AddProductVariantModal;
+export default AddProductModal;

@@ -7,10 +7,16 @@ export interface Suppliers {// Database Table
     supplier_id: number;
     supplier_name: string;
     location: string;
-    product_count: number | null;
+    ingredient_count: number;
     ingredients: Ingredients[];
 }
 export interface SupplierInput {
     supplier_name: string;
     location?: string;
+}
+
+export interface SuppliersPrice{
+    price: number;
+    supplier_id: number;
+    product_id: number;
 }

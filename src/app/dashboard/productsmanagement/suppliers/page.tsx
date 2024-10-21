@@ -2,12 +2,12 @@
 import React from 'react';
 import {Typography, Box, Button, CircularProgress} from "@mui/material";
 import AddSupplierButton from "@/components/AddButtons/AddSupplierButton/AddSupplierButton";
-import {useGetSuppliersQuery} from "@/lib/api/productsmanagement/supplierApiSlice";
+import {useGetSuppliersOverviewQuery} from "@/lib/api/productsmanagement/supplierApiSlice";
 import SuppliersTable from './supplierTable/SuppliersTable';
 
 
 const SuppliersPage = () => {
-    const { data: supplierData,error, isLoading } = useGetSuppliersQuery();
+    const { data: supplierData,error, isLoading } = useGetSuppliersOverviewQuery();
 
     if (isLoading)
         return (

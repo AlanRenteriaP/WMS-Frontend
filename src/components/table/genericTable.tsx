@@ -1,10 +1,7 @@
-// components/GenericTable/genericTable.tsx
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
-    Box,
-    Collapse,
     Paper,
     Table,
     TableBody,
@@ -12,18 +9,18 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Typography,
     IconButton,
 } from "@mui/material";
 import { Column } from "@/types/common/table";
-
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 
 interface GenericTableProps<T> {
     data: T[];
     columns: Column<T>[];
     isNested?: boolean;
-    renderNestedTable?: (item: T, index: number) => React.ReactNode; // Function to render nested table
+    renderNestedTable?: (item: T, index: number) => React.ReactNode;
+    enableRowClick?: boolean; // New prop to conditionally enable row clicks
+    onRowClick?: (item: T) => void; // Callback function to execute when row is clicked
 }
 
 const GenericTable = <T,>({
@@ -31,8 +28,11 @@ const GenericTable = <T,>({
                               columns,
                               isNested = false,
                               renderNestedTable,
+                              enableRowClick = false, // Optional prop to enable row clicks
+                              onRowClick, // Optional callback to trigger on row click
                           }: GenericTableProps<T>) => {
-    const [openRows, setOpenRows] = React.useState<Set<number>>(new Set());
+    const [openRows, setOpenRows] = useState<Set<number>>(new Set());
+    const [hoveredRow, setHoveredRow] = useState<number | null>(null); // Track hovered row for highlighting
 
     const handleToggle = (index: number) => {
         setOpenRows((prev) => {
@@ -46,12 +46,17 @@ const GenericTable = <T,>({
         });
     };
 
+    const handleRowClick = (item: T) => {
+        if (enableRowClick && onRowClick) {
+            onRowClick(item); // Call the callback passed from the parent component
+        }
+    };
+
     return (
         <TableContainer component={Paper}>
             <Table>
                 <TableHead>
                     <TableRow>
-                        {/* Conditionally render an extra cell for expand/collapse buttons */}
                         {isNested && renderNestedTable && <TableCell />}
                         {columns.map((column, idx) => (
                             <TableCell key={idx} align={column.align || "left"}>
@@ -64,14 +69,24 @@ const GenericTable = <T,>({
                     {data.length > 0 ? (
                         data.map((item, index) => (
                             <React.Fragment key={index}>
-                                <TableRow>
-                                    {/* Render expand/collapse button if not nested and provided */}
+                                <TableRow
+                                    onMouseEnter={() => setHoveredRow(index)} // Handle row hover
+                                    onMouseLeave={() => setHoveredRow(null)}  // Remove hover
+                                    onClick={() => handleRowClick(item)} // Handle row click
+                                    sx={{
+                                        cursor: enableRowClick ? 'pointer' : 'default',
+                                        backgroundColor: hoveredRow === index ? '#f5f5f5' : 'inherit', // Highlight on hover
+                                    }}
+                                >
                                     {isNested && renderNestedTable && (
                                         <TableCell>
                                             <IconButton
                                                 aria-label="expand row"
                                                 size="small"
-                                                onClick={() => handleToggle(index)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); // Prevent row click when expanding
+                                                    handleToggle(index);
+                                                }}
                                             >
                                                 {openRows.has(index) ? (
                                                     <KeyboardArrowUp />
@@ -85,8 +100,7 @@ const GenericTable = <T,>({
                                         <TableCell key={idx} align={column.align || "left"}>
                                             {column.render
                                                 ? column.render(item)
-                                                : // Handle nested accessors like 'products.length'
-                                                typeof column.accessor === "string" &&
+                                                : typeof column.accessor === "string" &&
                                                 column.accessor.includes(".")
                                                     ? column.accessor
                                                         .split(".")
@@ -95,7 +109,6 @@ const GenericTable = <T,>({
                                         </TableCell>
                                     ))}
                                 </TableRow>
-                                {/* Render nested table if applicable */}
                                 {isNested && renderNestedTable && openRows.has(index) && (
                                     <TableRow>
                                         <TableCell colSpan={columns.length + 1}>
